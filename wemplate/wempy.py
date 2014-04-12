@@ -16,7 +16,12 @@ Contributors:
 - Thank you to Limodou (creater of uliweb) who inspired the block-element support for web2py.
 """
 
-import os, getopt, sys, fileinput, cStringIO
+import os, getopt, sys, fileinput
+try:
+    import cStringIO as StringIO
+except:
+    from io import StringIO
+
 import wemplate
 
 
