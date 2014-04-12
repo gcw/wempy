@@ -22,7 +22,7 @@ import re
 import logging
 
 try:
-    import cStringIO as StringIO
+    import cStringIO.StringIO
 except:
     from io import StringIO
 
@@ -838,7 +838,7 @@ class TemplateParser(object):
             self.extend(extend)
 
     def render(self, *args, **kwargs):
-        exec_buffer = StringIO.StringIO()
+        exec_buffer = StringIO()
         sys.stdout = exec_buffer
         temp_context = {}
         temp_context.update(self.context)
