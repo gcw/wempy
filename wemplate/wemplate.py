@@ -39,7 +39,8 @@ def determine_path():
         if os.path.islink(base):
             return os.path.dirname(os.path.asbpath(base))
     except:
-        print("I'm sorry but I'm having trouble determining my path. Aborting...")
+        print("I'm sorry but I'm having trouble determining my path. Aborting...",
+              file=sys.stderr)
         sys.exit()
 
 class Node(object):
