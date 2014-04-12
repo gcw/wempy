@@ -1,0 +1,38 @@
+<h2>Readme</h2>
+
+wempy is a simple embedded python interpreter used either as a library or from
+the commandline. 
+
+Wempy is taken directly from the <a href="http://www.web2py.com"
+target="yw5zrp">web2py</a> framework.
+
+Thanks to <a href="http://www.thadeusb.com" target="yw5zrp">Thadeus Burges</a>
+for re-writing the templates used in web2py
+
+Thanks to <a href="http://www.metacryption.com" target="yw5zrp">Massimo di
+Pierro</a> for creating web2py and more specifically for the original design and
+implementation of the template system for web2py
+
+<h3>Docs</h3>
+[/doc/tip/docs/install.wiki|Installation] (installing wempy)
+
+[/doc/tip/docs/syntax.wiki|syntax] (wemplate syntax)
+
+[/doc/tip/docs/wempy-utility.wiki|wempy] (command line utility)
+
+[/doc/tip/docs/api.wiki|API] (using wempy's library)
+
+<h3>Contributions Welcomed</h3>
+So far wempy is mostly the work that I've stolen from web2py and my very minor
+contributions/abominations. If something about it doesn't quite suit your fancy
+you have options:
+
+  *  <b>[/tktnew|create a ticket]</b> - You can anonymously login using the 'fill out captcha' button to create a ticket for any issue you want to bring to our attention (even feature requests)
+  *  <b>submit a patch</b> - I tend not to use git unless circumstances dictate that I must. Please do not send a git formatted patch as it will generally receive very low priority. Generic patches will be well received.
+  *  <b>join the project</b> -  Send me an email <gcw-wempy {.} notadiscussion.com> tell me where to send your username/password (optional: learn to use fossil)
+  *  <b>shut up about it</b> - Go explor the wonders of expressing your love for yourself physically
+
+<em>note</em>: We do not require copyright assignments or contributor agreements. We do
+request that you indicate the licenses under which your works maybe distributed.
+If LGPL v3 is not among the listed acceptable licenses we cannot accept your
+work.

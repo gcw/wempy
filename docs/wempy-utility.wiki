@@ -1,0 +1,49 @@
+<h2>Wempy (utility)</h2>
+
+Wempy is a commandline utility similar to ruby's 
+<a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/erb/rdoc/ERB.html"
+target="new__">erb</a>. The goal is to provide a simple tool for making use of
+python's programmatic power and elegance without needing to learn another
+language (presuming that you either know or will be learning Python anyway).
+
+Excuting <em>wempy</em> on the command line without any arguments will cause you to enter direct-input mode. This is handy for piping or redirecting input into wempy as it will continue to read characters until it receives the EOF character:
+
+<verbatim>
+% echo '{{fruit="apple"}}Here have an {{=fruit}}' | wempy
+</verbatim>
+
+To see all of the command line options (and usage documentation) just use <b>--help</b> or <b>-h</b>:
+<verbatim>
+% wempy -h
+
+usage: 
+/Users/gcw/.pythonbrew/pythons/Python-2.7.3/bin/wempy [options] [intputfiles] 
+    -x print python script
+    -p template path (where to look for templates with relative paths)
+
+</verbatim>
+If you want to examine the script generated for your input you can use the <b>-x</b> option:
+<verbatim>
+% echo '{{fruit="apple"}}Here have an {{=fruit}}' | wempy -x 
+import sys
+fruit="apple"
+sys.stdout.write('Here have an ')
+sys.stdout.write(fruit)
+sys.stdout.write('\n')
+</verbatim>
+
+If you pass a file as an argument to <em>wempy<em> you'll process the contents of the file: 
+<verbatim>
+% echo '{{fruit="apple"}}Here have an {{=fruit}}' > /tmp/wempy.test
+% wempy /tmp/wempy.test
+Here have an apple
+</verbatim>
+
+If you're using 'extend' and 'include' in your templates you can use the <b>-p</b> parameter to set the relative path for you templates: 
+<verbatim>
+% mkdir /tmp/templates
+% echo "Parent Prefix : {{ include }} : Parent Postfix" > /tmp/templates/parent.wempy
+% echo -n "{{extend 'parent.wempy'}} This is what's in the Child" > /tmp/child.wempy
+% wempy -p /tmp/templates /tmp/child.wempy 
+Parent Prefix :  This is what's in the Child : Parent Postfix
+</verbatim>

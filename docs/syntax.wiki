@@ -1,0 +1,188 @@
+<h2>Wemplate Syntax</h2>
+
+Wempy is an embedded python interpreter. The syntax is plain python with a few
+key changes. 
+
+  #  There is no need for indentation
+  #  The python keyword 'pass' must be used to indicate the end of some
+statements, blocks, and loops (like if/else, Try/Except, for, and while)
+depending on context
+  #  'extend' and 'include' are special keywords used for template inheritence
+
+<h3>Syntax</h3>
+Unlike other template systems the standard python syntax rules apply
+(minus indentation requirements). There is very little to learn if you already
+know python. 
+
+<h4>Tags</h4>
+To embed python in your templates you need to place your code inside tags.
+The opening tags in wemplates are double-curly braces '{{'. The closing tags
+are the reciprocal double-curley braces '}}'. 
+
+<verbatim>
+{{
+if i == 0:
+sys.stdout.write('i is 0')
+else:
+sys.stdout.write('i is not 0')
+pass
+}}
+</verbatim>
+
+<h4>Pass</h4>
+Pass is a special (python) keyword used to indicate that a block is closed or
+finished. In general this is useful for special cases where you might want to
+explicitly close an empty function/method or class. In wemplates it's also used
+to indicate the end of a block of code. 
+
+<verbatim>
+<html>
+  <body>
+{{ for x in range(10):}} {{= str(x)}} * {{= str(x - 1)}} is {{= str(x*(x - 1))}}<br />{{pass}}
+  </body>
+</html>
+</verbatim>
+
+<h4>Writer alias '='</h4>
+The wemplate module allows you to specify a 'writer' for the template. By
+default the writer is set to <em>sys.stdout.write()</em>. You can use whatever
+writer you like (some prefer <em>print()</em>). The equal sign '=' immediately
+following an opening tag '{{=' is used as an alias for your writer.
+
+Without this little convenience the previous example might have looked
+something like this:
+<verbatim>
+<html>
+  <body>
+{{ for x in range(10):}} {{ print x}}
+* {{ print x - 1}} is {{ print x*(x - 1)}}<br />{{pass}}
+  </body>
+</html>
+</verbatim>
+
+or worse: 
+<verbatim>
+<html>
+  <body>
+{{ for x in range(10):}} {{ sys.stdout.write(str(x)) }}
+* {{ sys.stdout.write(str(x - 1)) }} is {{ sys.stdout.write(str(x*(x - 1))) }}
+<br /> {{pass}}
+  </body>
+</html>
+</verbatim>
+
+Anywhere else in a tag-set (even with a single space after the opening tag)
+the '=' is treated as a normal equals sign. 
+
+<b>*Note*</b>:
+The default writer <em>sys.stdout.write()</em> requires buffer character
+objects for output. There is no type coercion performed. This means that
+you may need wrap some of your variables in a call to str() or do some other
+conversion/manipulation.
+
+<h4>Basic (Python) Syntax</h4>
+
+<h5>Loops</h5>
+Basic <em>for</em> and <em>while</em> loops might look something like this:
+<verbatim>
+{{top = 100}}
+{{while top > 1:}}
+{{=str(top)}}
+{{top = top/2}}
+{{pass}}
+</verbatim>
+
+which produces: 
+<verbatim>
+
+100
+
+
+50
+
+
+25
+
+
+12
+
+
+6
+
+
+3
+
+
+</verbatim>
+
+or perhaps: 
+<verbatim>
+{{guests = ['Larry', 'Guido', 'Matz']}}
+{{for guest in guests:}}
+    {{=guest}}
+{{pass}}
+</verbatim>
+
+which produces this output: 
+
+<verbatim>
+
+
+    Larry
+
+    Guido
+
+    Matz
+</verbatim>
+The blank lines are due to the new line characters that exist right after
+the closing tags. To get rid of we can either consolidate things:
+<verbatim>
+{{guests = ['Larry', 'Guido', 'Matz']}} {{for guest in guests:}} {{=guest}} {{pass}}
+</verbatim>
+
+or in some cases (particularly when using here-documents from the shell) a new
+line character can be escaped with a backslash '\'.
+
+<verbatim>
+{{guests = ['Larry', 'Guido', 'Matz']}}\
+{{for guest in guests:}}\
+    {{=guest}}\
+{{pass}}\
+</verbatim>
+
+<b>*Note*</b>:
+Backslash escaping of new line characters will not work from the input
+buffer of the <em>wempy</em> utility or templates stored inside files
+
+<h5>Conditional statements</h5>
+Typical if...else or try...except clauses can be used with ease:
+
+<verbatim>
+{{
+import random
+rval = random.randint(0,100)
+}}
+{{=str(rval)}} is {{if k rval > 50:}}large{{else:}}is small{{pass}}
+</verbatim>
+
+<verbatim>
+{{try:}}
+Hello {{= str( 1 / 0 )}}
+{{except:}}
+division by zero
+{{else:}}
+no division by zero
+{{finally}}
+end of block
+{{pass}}
+</verbatim>
+
+<h5>Definitions</h5>
+Standard difinitions work as well. You can define functions and classes just
+as you would normally in python:
+
+<verbatim>
+{{def foo(bar): return str(bar * bar)}}
+{{=foo(16)}}
+</verbatim>
+

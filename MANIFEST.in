@@ -1,0 +1,4 @@
+include wempy
+include LICENSE
+include README
+recursive-include  wemplate *.py
