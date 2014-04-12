@@ -6,7 +6,7 @@ This file is part of the wempy template system
 Copyrighted by G. Clifford Williams <gcw@notadiscussion.com>
 License: LGPLv3 (http://www.gnu.org/licenses/lgpl.html)
 
-Author: G. Clifford Williams (for wempy templating system) 
+Author: G. Clifford Williams (for wempy templating system)
 Original-Author: Thadeus Burgess (for the web2py project)
 
 Contributors:
@@ -21,7 +21,7 @@ import sys
 import re
 import logging
 
-try: 
+try:
     import cStringIO as StringIO
 except:
     from io import StringIO
@@ -843,15 +843,15 @@ class TemplateParser(object):
         temp_context.update(self.context)
         temp_context.update(*args, **kwargs)
         code = str(self)
-        try: 
-            exec code in temp_context 
+        try:
+            exec code in temp_context
             sys.stdout = sys.__stdout__
             self.last_output = exec_buffer.getvalue()
             exec_buffer.close()
         except Exception:
             raise
         return self.last_output
-        
+
 
 if __name__ == '__main__':
     import doctest
