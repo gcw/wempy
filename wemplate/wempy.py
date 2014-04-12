@@ -75,8 +75,8 @@ def start():
     try:
         opciones, input_files = getopt.getopt(sys.argv[1:], "p:hx?",
                                         ["help", "version"])
-    except getopt.GetoptError, err:
-        print str(err) #print out the value of the error
+    except getopt.GetoptError as err:
+        print(str(err)) #print out the value of the error
         usage()
         sys.exit(2)
     for o, a in opciones: #process the options supplied on the command line
