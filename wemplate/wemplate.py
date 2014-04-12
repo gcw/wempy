@@ -23,7 +23,7 @@ import logging
 
 try:
     import cStringIO.StringIO
-except:
+except ImportError:
     from io import StringIO
 
 try:
