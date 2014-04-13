@@ -848,7 +848,7 @@ class TemplateParser(object):
         temp_context.update(*args, **kwargs)
         code = str(self)
         try:
-            exec code in temp_context
+            exec(code, temp_context)
             sys.stdout = sys.__stdout__
             self.last_output = exec_buffer.getvalue()
             exec_buffer.close()
