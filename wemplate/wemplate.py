@@ -16,6 +16,8 @@ Contributors:
 - Thank you to Limodou (creater of uliweb) who inspired the block-element support for web2py.
 """
 
+from __future__ import unicode_literals
+
 import os
 import sys
 import re
