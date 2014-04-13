@@ -16,6 +16,7 @@ Contributors:
 - Thank you to Limodou (creater of uliweb) who inspired the block-element support for web2py.
 """
 
+from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
@@ -25,7 +26,7 @@ try:
 except:
     from io import StringIO
 
-import wemplate
+from .wemplate import TemplateParser
 
 
 def usage():
@@ -55,7 +56,7 @@ def process(filein=False, bitsin=False, parsed=False):
         bitsin = get_file_text(filein)
     if not filein and not bitsin:
         bitsin = sys.stdin.read()
-    parser = wemplate.TemplateParser(bitsin,path=template_path)
+    parser = TemplateParser(bitsin,path=template_path)
 
     return str(parser) if parsed else parser.render()
 
