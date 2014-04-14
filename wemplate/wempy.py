@@ -6,7 +6,7 @@ This file is part of the wempy template system
 Copyrighted by G. Clifford Williams <gcw@notadiscussion.com>
 License: LGPLv3 (http://www.gnu.org/licenses/lgpl.html)
 
-Author: G. Clifford Williams (for wempy templating system) 
+Author: G. Clifford Williams (for wempy templating system)
 
 Contributors:
 
@@ -16,14 +16,23 @@ Contributors:
 - Thank you to Limodou (creater of uliweb) who inspired the block-element support for web2py.
 """
 
-import os, getopt, sys, fileinput, cStringIO
-import wemplate
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import os, getopt, sys, fileinput
+try:
+    import cStringIO as StringIO
+except:
+    from io import StringIO
+
+from .wemplate import TemplateParser
 
 
 def usage():
     usage_message = """
-usage: 
-%s [options] [intputfiles] 
+usage:
+%s [options] [intputfiles]
     -x print python script
     -p template path (where to look for templates with relative paths)
 
@@ -47,15 +56,15 @@ def process(filein=False, bitsin=False, parsed=False):
         bitsin = get_file_text(filein)
     if not filein and not bitsin:
         bitsin = sys.stdin.read()
-    parser = wemplate.TemplateParser(bitsin,path=template_path)
-                                
+    parser = TemplateParser(bitsin,path=template_path)
+
     return str(parser) if parsed else parser.render()
-    
+
 
 def start():
     """
     This function simply kicks off the processing of input based on arguments
-    passed on the command line. 
+    passed on the command line.
 
     A file given as an argument is first searched for in the CWD/PWD then the
     filename is sought in the path specified with -p if one is given.
@@ -68,8 +77,8 @@ def start():
     try:
         opciones, input_files = getopt.getopt(sys.argv[1:], "p:hx?",
                                         ["help", "version"])
-    except getopt.GetoptError, err:
-        print str(err) #print out the value of the error
+    except getopt.GetoptError as err:
+        print(str(err)) #print out the value of the error
         usage()
         sys.exit(2)
     for o, a in opciones: #process the options supplied on the command line
@@ -89,6 +98,6 @@ def start():
             sys.stdout.write(process(filein=full_path, parsed=want_parsed))
     else:
         sys.stdout.write(process(bitsin=sys.stdin.read(), parsed=want_parsed))
-        
+
 if __name__ == "__main__" :
     start()

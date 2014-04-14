@@ -6,7 +6,7 @@ This file is part of the wempy template system
 Copyrighted by G. Clifford Williams <gcw@notadiscussion.com>
 License: LGPLv3 (http://www.gnu.org/licenses/lgpl.html)
 
-Author: G. Clifford Williams (for wempy templating system) 
+Author: G. Clifford Williams (for wempy templating system)
 Original-Author: Thadeus Burgess (for the web2py project)
 
 Contributors:
@@ -16,14 +16,17 @@ Contributors:
 - Thank you to Limodou (creater of uliweb) who inspired the block-element support for web2py.
 """
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import os
 import sys
 import re
 import logging
 
-try: 
-    import cStringIO as StringIO
-except:
+try:
+    import cStringIO.StringIO
+except ImportError:
     from io import StringIO
 
 try:
@@ -39,7 +42,8 @@ def determine_path():
         if os.path.islink(base):
             return os.path.dirname(os.path.asbpath(base))
     except:
-        print "I'm sorry but I'm having trouble determining my path. Aborting..."
+        print("I'm sorry but I'm having trouble determining my path. Aborting...",
+              file=sys.stderr)
         sys.exit()
 
 class Node(object):
@@ -306,7 +310,7 @@ class TemplateParser(object):
         if delimiters != self.default_delimiters:
             escaped_delimiters = (re.escape(delimiters[0]),re.escape(delimiters[1]))
             self.r_tag = re.compile(r'(%s.*?%s)' % escaped_delimiters, re.DOTALL)
-        elif context.has_key('response') and hasattr(context['response'],'delimiters'):
+        elif 'response' in context and hasattr(context['response'],'delimiters'):
             if context['response'].delimiters != self.default_delimiters:
                 escaped_delimiters = (re.escape(context['response'].delimiters[0]),
                                       re.escape(context['response'].delimiters[1]))
@@ -837,21 +841,21 @@ class TemplateParser(object):
             self.extend(extend)
 
     def render(self, *args, **kwargs):
-        exec_buffer = StringIO.StringIO()
+        exec_buffer = StringIO()
         sys.stdout = exec_buffer
         temp_context = {}
         temp_context.update(self.context)
         temp_context.update(*args, **kwargs)
         code = str(self)
-        try: 
-            exec code in temp_context 
+        try:
+            exec(code, temp_context)
             sys.stdout = sys.__stdout__
             self.last_output = exec_buffer.getvalue()
             exec_buffer.close()
         except Exception:
             raise
         return self.last_output
-        
+
 
 if __name__ == '__main__':
     import doctest
