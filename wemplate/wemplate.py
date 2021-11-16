@@ -24,17 +24,36 @@ import sys
 import re
 import logging
 
-try:
-    import cStringIO.StringIO
-except ImportError:
-    from io import StringIO
+PY3 = sys.version_info[0] == 3
+PY2 = sys.version_info[0] == 2
 
-try:
+if PY2:
+    import cStringIO.StringIO
     from restricted import RestrictedError
-except:
+    unicodeT = unicode
+
+    def to_bytes(obj, charset='utf-8', errors='strict'):
+        return bytes(obj) if isinstance(obj, (bytes, bytearray, buffer)) else obj.encode(charset, errors)
+
+    def to_native(obj, charset='utf8', errors='strict'):
+        return obj if isinstance(obj, str) else obj.encode(charset, errors)
+
+
+if PY3:
+    from io import StringIO
     def RestrictedError(a,b,c):
         logging.error(str(a)+':'+str(b)+':'+str(c))
         return RuntimeError
+    basestring = str
+    unicodeT = str
+
+    def to_bytes(obj, charset='utf-8', errors='strict'):
+        return bytes(obj) if isinstance(obj, (bytes, bytearray, memoryview)) else obj.encode(charset, errors)
+
+    def to_native(obj, charset='utf8', errors='strict'):
+        return obj if isinstance(obj, str) else obj.decode(charset, errors)
+
+
 
 def determine_path():
     try:
@@ -474,7 +493,7 @@ class TemplateParser(object):
         except IOError:
             self._raise_error('Unable to open included view file: ' + filepath)
 
-        return text
+        return to_native(text)
 
     def include(self, content, filename):
         """
@@ -496,7 +515,9 @@ class TemplateParser(object):
         Extend ``filename``. Anything not declared in a block defined by the
         parent will be placed in the parent templates ``{{include}}`` block.
         """
-        text = self._get_file_text(filename)
+        # If no filename, create a dummy layout with only an {{include}}.
+        text = self._get_file_text(filename) or '%sinclude%s' % tuple(self.delimiters)
+
 
         # Create out nodes list to send to the parent
         super_nodes = []
@@ -570,7 +591,7 @@ class TemplateParser(object):
         # Use a list to store everything in
         # This is because later the code will "look ahead"
         # for missing strings or brackets.
-        ij = self.r_tag.split(text)
+        ij = self.r_tag.split(to_native(text))
         # j = current index
         # i = current item
         for j in range(len(ij)):
@@ -692,7 +713,7 @@ class TemplateParser(object):
                         self.lexers[name](parser    = self,
                                           value     = value,
                                           top       = top,
-                                          stack     = self.stack,)
+                                          stack     = self.stack)
 
                     elif name == '=':
                         # So we have a variable to insert into
@@ -788,7 +809,6 @@ class TemplateParser(object):
                                 if tokens[k].startswith('='):
                                     if tokens[k].endswith('\\'):
                                         continuation = True
-                                        tokens[k] = "\n%s(%s" % (self.writer, tokens[k][1:].strip())
                                         tokens[k] = "\n%s(%s" % (self.writer, tokens[k][1:].strip())
                                     else:
                                         if self.writer == 'print':
